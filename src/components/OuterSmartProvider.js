@@ -19,14 +19,14 @@ class OuterSmartProvider extends React.Component<OuterProps, {}> {
     }
 
     render() {
-        const { tag, contextMap, children } = this.props;
+        const { tag, contextMap, value, children } = this.props;
 
         const Context = contextMap[tag];
 
         return (
-            <Context.Consumer>
+            <Context.Provider value={value}>
                 {React.children.only(children)}
-            </Context.Consumer>
+            </Context.Provider>
         );
     }
 }
