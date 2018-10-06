@@ -1,4 +1,4 @@
-React Smart Context
+# React Smart Context
 
 In search of better React state management solutions, I found a hole where the state was long-lived and the actions to manipulate it were simple. Redux has significant boilerplate in these use cases, and Context can have rough edges when populating the default value with Component state.
 
