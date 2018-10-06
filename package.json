@@ -1,0 +1,15 @@
+{
+  "name": "react-smart-context",
+  "version": "0.0.1",
+  "description": "A Smart React 16 Context paradigm for stateful Providers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jfo84",
+  "license": "MIT",
+  "devDependencies": {
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2"
+  }
+}
