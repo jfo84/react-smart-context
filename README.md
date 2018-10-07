@@ -1,6 +1,6 @@
 # React Smart Context
 
-In search of better React state management solutions, I found a hole where the state was long-lived and the actions to manipulate it were simple. Redux has significant boilerplate in these use cases, and Context can have rough edges when populating the default value with Component state.
+In search of better React state management solutions, I found a hole where the state was long-lived and the actions to manipulate it were simple. Redux has significant boilerplate in these use cases, and React 16 Context can have rough edges when populating the default value with Component state.
 
 So I wrote a simple library called React Smart Context. It uses a Context-in-Context paradigm: a root Context manages a map of Contexts, each with a single (smart) Provider.
 
@@ -61,3 +61,5 @@ const BlueprintSelector = ({ name }) => (
 That's it. All direct usage of Context is abstracted away. The state and the logic for manipulating it now live under one roof: your stateful Provider.
 
 The library's only dependency is React, and the implementation including static types clocks in at under 200 lines of JavaScript.
+
+Requires React 16.3+
