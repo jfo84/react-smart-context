@@ -33,4 +33,4 @@ class OuterSmartRootProvider extends React.Component<Props, SmartContextT> {
     }
 }
 
-export default SmartRootProvider;
+export default OuterSmartRootProvider;
