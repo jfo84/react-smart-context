@@ -58,4 +58,6 @@ const BlueprintSelector = ({ name }) => (
 );
 ```
 
-That's it. All direct usage of Context is abstracted away, and the logic for manipulating state stays in one place: your stateful Provider. The library's only dependency is React, and the implementation including static types clocks in at under 200 lines of JavaScript.
+That's it. All direct usage of Context is abstracted away. The state and the logic for manipulating it now live under one roof: your stateful Provider.
+
+The library's only dependency is React, and the implementation including static types clocks in at under 200 lines of JavaScript.
