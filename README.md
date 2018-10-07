@@ -17,7 +17,7 @@ import { SmartProvider } from 'react-smart-context';
 class AnalyticsProvider extends React.Component {
     state = {
         blueprintId: '',
-        selectBlueprintId: (id) => this.setState({ blueprintId: id }),
+        selectBlueprintId: (id) => this.setState(prevState => ({ blueprintId: id })),
     };
 
     render() {

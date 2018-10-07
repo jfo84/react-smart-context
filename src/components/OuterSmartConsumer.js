@@ -1,31 +1,32 @@
 // @flow
 import * as React from 'react';
-import { InnerSmartConsumer } from '../contexts/SmartContext';
+import { SmartRootConsumer } from '../contexts/SmartRootContext';
 import { SmartRootContextT, ContextMapT } from '../types';
 
 type OuterProps = {|
+    Context: React.Context,
     children: React.Node,
-    contextMap: ContextMapT,
-    tag: string,
 |};
 
-const OuterSmartConsumer = ({ tag, contextMap, children }: OuterProps) => {
-    const Context = contextMap[tag];
-
-    return (
-        <Context.Consumer>
-            {React.children.only(children)}
-        </Context.Consumer>
-    );
+const OuterSmartConsumer = ({ Context, children }: OuterProps) => {
+    if (Context) {
+        return (
+            <Context.Consumer>
+                {React.children.only(children)}
+            </Context.Consumer>
+        );
+    }
+    
+    throw new Error("Your 'tag' prop must match that of a SmartProvider");
 };
 
 type InnerProps = {|
     tag: string,
 |};
 
-const ProviderWithContext = (props: InnerProps) => (
+const ProviderWithContext = ({ tag }: InnerProps) => (
     <SmartRootConsumer>
-        {({ contextMap }: SmartRootContextT) => <OuterSmartConsumer {...props} getContext={getContext} />}
+        {({ contextMap }: SmartRootContextT) => <OuterSmartConsumer Context={contextMap[tag]} />}
     </SmartRootConsumer>
 );
 

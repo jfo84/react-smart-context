@@ -7,6 +7,7 @@ import { SmartContextT, SmartRootContextT } from '../types';
 type OuterProps = {|
     children: React.Node,
     addContext: Function,
+    Context: React.Context,
     value: any,
     tag: string,
 |};
@@ -14,35 +15,41 @@ type OuterProps = {|
 class OuterSmartProvider extends React.Component<OuterProps, {}> {
     componentDidMount() {
         const { tag, addContext } = this.props;
-        const Context = React.createContext(null);
-        addContext(Context, tag);
+
+        if (tag) {
+            const Context = React.createContext(null);
+            addContext(Context, tag);
+        } else {
+            throw new Error("You must pass a 'tag' prop to the SmartProvider");
+        }
     }
 
     render() {
-        const { tag, contextMap, value, children } = this.props;
+        const { Context, value, children } = this.props;
 
-        const Context = contextMap[tag];
-
-        return (
-            <Context.Provider value={value}>
-                {React.children.only(children)}
-            </Context.Provider>
-        );
+        if (Context) {
+            return (
+                <Context.Provider value={value}>
+                    {React.children.only(children)}
+                </Context.Provider>
+            );
+        }
     }
 }
 
 type InnerProps = {|
-    value: null,
+    value: any,
     tag: string,
 |};
 
-const ProviderWithContext = (props: InnerProps) => (
+const ProviderWithContext = ({ tag, value }: InnerProps) => (
     <SmartRootConsumer>
         {({ addContext, contextMap }: SmartRootContextT) => (
             <OuterSmartProvider
-                {...props}
+                tag={tag}
+                value={value}
                 addContext={addContext}
-                contextMap={contextMap}
+                Context={contextMap[tag]}
             />
         )}
     </SmartRootConsumer>
