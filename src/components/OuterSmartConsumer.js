@@ -17,7 +17,7 @@ const OuterSmartConsumer = ({ Context, children }: OuterProps) => {
         );
     }
     
-    throw new Error("Your 'tag' prop must match that of a SmartProvider");
+    throw new Error("Your 'tag' prop must match that of an ancestor SmartProvider");
 };
 
 type InnerProps = {|

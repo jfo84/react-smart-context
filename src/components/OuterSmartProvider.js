@@ -10,6 +10,7 @@ type OuterProps = {|
     Context: React.Context,
     value: any,
     tag: string,
+    actions: Array<Function>,
 |};
 
 class OuterSmartProvider extends React.Component<OuterProps, {}> {
@@ -25,11 +26,11 @@ class OuterSmartProvider extends React.Component<OuterProps, {}> {
     }
 
     render() {
-        const { Context, value, children } = this.props;
+        const { Context, value, actions, children } = this.props;
 
         if (Context) {
             return (
-                <Context.Provider value={value}>
+                <Context.Provider value={value, actions}>
                     {React.children.only(children)}
                 </Context.Provider>
             );
@@ -38,16 +39,18 @@ class OuterSmartProvider extends React.Component<OuterProps, {}> {
 }
 
 type InnerProps = {|
-    value: any,
     tag: string,
+    value: any,
+    actions: Array<Function>,
 |};
 
-const ProviderWithContext = ({ tag, value }: InnerProps) => (
+const ProviderWithContext = ({ tag, value, actions }: InnerProps) => (
     <SmartRootConsumer>
         {({ addContext, contextMap }: SmartRootContextT) => (
             <OuterSmartProvider
                 tag={tag}
                 value={value}
+                actions={actions}
                 addContext={addContext}
                 Context={contextMap[tag]}
             />
