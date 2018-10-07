@@ -9,7 +9,7 @@ The SmartProvider and SmartConsumer consume the root Context and maintain the sa
 All you need to do is:
 1. Wrap your App with the SmartRootProvider Component
 2. Pass a 'tag' prop to internally tag the particular Context (similar to the keyed state shape of Redux)
-3. Pass an 'actions' prop, a map of functions that manipulate state, alongside your 'value' prop 
+3. Pass an 'actions' prop, a map of functions that manipulate state, to your Provider alongside your 'value' prop 
 
 Here's an example of a stateful Provider Component:
 
@@ -58,4 +58,4 @@ const BlueprintSelector = ({ name }) => (
 );
 ```
 
-That's it. The library's only dependency is React, and the implementation including static types clocks in at under 200 lines of JavaScript.
+That's it. All direct usage of Context is abstracted away, and the logic for manipulating state stays in one place: your stateful Provider. The library's only dependency is React, and the implementation including static types clocks in at under 200 lines of JavaScript.
