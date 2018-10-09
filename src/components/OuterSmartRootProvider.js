@@ -1,35 +1,48 @@
 // @flow
 import * as React from 'react';
-import { InnerSmartRootProvider } from '../contexts/SmartContext';
-import { SmartRootContextT } from '../types';
+import { InnerSmartRootProvider } from '../contexts/SmartRootContext';
+import type { SmartRootContextT } from '../types';
 
 type Props = {|
     children: React.Node,
 |};
 
-class OuterSmartRootProvider extends React.Component<Props, SmartContextT> {
+class OuterSmartRootProvider extends React.Component<Props, SmartRootContextT> {
     state = {
-        contextMap: {},
-        addContext: (Context: React.Context, tag: string) => this.addContext(Context, tag),
+        contextsMap: {},
+        addContexts: (tag: string) => this.addContexts(tag),
     };
 
-    addContext = (Context: React.Context, tag: string) => {
-        this.setState(prevState => ({
-            contextMap: {
-                ...prevState.contextMap,
-                [tag]: Context,
-            }
+    addContexts = (tag: string) => {
+        const Contexts = {
+            Providers: {},
+            Consumers: {},
+            push: function(type: string) {
+                const { Provider, Consumer } = React.createContext(null);
+                this.Providers[type] = Provider;
+                this.Consumers[type] = Consumer;
+            },
+        };
+
+        Contexts.push('State');
+        Contexts.push('Actions');
+
+        this.setState((prevState) => ({
+            contextsMap: {
+                ...prevState.contextsMap,
+                [tag]: Contexts,
+            },
         }));
     };
 
     render() {
-      const { children } = this.props;
+        const { children } = this.props;
 
-      return (
-        <InnerSmartRootProvider value={{ ...this.state }}>
-            {React.Children.only(children)}
-        </InnerSmartRootProvider>
-      );
+        return (
+            <InnerSmartRootProvider value={{ ...this.state }}>
+                {React.Children.only(children)}
+            </InnerSmartRootProvider>
+        );
     }
 }
 

@@ -1,33 +1,46 @@
 // @flow
 import * as React from 'react';
 import { SmartRootConsumer } from '../contexts/SmartRootContext';
-import { SmartRootContextT, ContextMapT } from '../types';
+import type { SmartRootContextT } from '../types';
 
 type OuterProps = {|
-    Context: React.Context,
-    children: React.Node,
+    Consumer: React.Consumer,
+    children: Function,
 |};
 
-const OuterSmartConsumer = ({ Context, children }: OuterProps) => {
-    if (Context) {
-        return (
-            <Context.Consumer>
-                {React.children.only(children)}
-            </Context.Consumer>
-        );
-    }
-    
-    throw new Error("Your 'tag' prop must match that of an ancestor SmartProvider");
-};
+const OuterSmartConsumer = ({ Consumer, children }: OuterProps) => <Consumer>{children}</Consumer>;
 
 type InnerProps = {|
     tag: string,
+    state: boolean,
+    actions: boolean,
+    children: Function,
 |};
 
-const ProviderWithContext = ({ tag }: InnerProps) => (
-    <SmartRootConsumer>
-        {({ contextMap }: SmartRootContextT) => <OuterSmartConsumer Context={contextMap[tag]} />}
-    </SmartRootConsumer>
-);
+const ProviderWithContext = ({ tag, state, actions, children }: InnerProps) => {
+    if (!state && !actions) {
+        throw new Error("You must pass a 'state' or 'actions' prop to indicate the type of Consumer")
+    }
+
+    return (
+        <SmartRootConsumer>
+            {({ contextsMap }: SmartRootContextT) => {
+                const { Consumers } = contextsMap[tag];
+
+                if (!Consumers) {
+                    throw new Error("You must pass a 'tag' prop that matches that of a descendant SmartProvider");
+                }
+
+                if (state) {
+                    return <OuterSmartConsumer Consumer={Consumers.State}>{children}</OuterSmartConsumer>;
+                }
+
+                if (actions) {
+                    return <OuterSmartConsumer Consumer={Consumers.Actions}>{children}</OuterSmartConsumer>;
+                }
+            }}
+        </SmartRootConsumer>
+    );
+}
 
 export default ProviderWithContext;

@@ -1,10 +1,26 @@
 // @flow
 import * as React from 'react';
 
-export type ContextMapT = {|
-    [tag: string]: React.Context
+export type ContextsT = {|
+    Providers: ProvidersT,
+    Consumers: ConsumersT,
+|};
+
+export type ProvidersT = {|
+    Actions: React.Provider,
+    State: React.Provider,
+|};
+
+export type ConsumersT = {|
+    Actions: React.Consumer,
+    State: React.Consumer,
+|};
+
+export type ContextsMapT = {|
+    [tag: string]: ContextsT,
 |};
 
 export type SmartRootContextT = {|
-    contextMap: ContextMapT,
+    contextsMap: ContextsMapT,
+    addContext: Function,
 |};

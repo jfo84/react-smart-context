@@ -30,7 +30,7 @@ class AnalyticsProvider extends React.Component {
         const { children } = this.props;
 
         return (
-            <SmartProvider tag='analytics' value={{ ...this.state }} actions={{ ...this.actions }}>
+            <SmartProvider tag='analytics' state={{ ...this.state }} actions={this.actions}>
                 {React.Children.only(children)}
             </SmartProvider>
         );
@@ -38,21 +38,18 @@ class AnalyticsProvider extends React.Component {
 }
 ```
 
-and it's matching Consumer, which allows consumption of state and actions as positional arguments:
+and it's matching Consumer, which allows consumption of state and actions based on a boolean prop:
 
 ```js
 import * as React from 'react';
 import { SmartConsumer } from 'react-smart-context';
 
 const BlueprintSelector = ({ name }) => (
-    <SmartConsumer tag='analytics'>
-        {({ blueprintName }, { selectBlueprintName }) => (
-            <React.Fragment>
-                <h1>{blueprintName}</h1>
-                <button onClick={() => selectBlueprintName(name)}>
-                    Select Blueprint
-                </button>
-            </React.Fragment>
+    <SmartConsumer actions tag='analytics'>
+        {({ selectBlueprintName }) => (
+            <button onClick={() => selectBlueprintName(name)}>
+                Select Blueprint
+            </button>
         )}
     </SmartConsumer>
 );

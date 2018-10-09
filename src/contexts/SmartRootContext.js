@@ -1,9 +1,10 @@
 // @flow
 import * as React from 'react';
-import { SmartRootContextT } from '../types';
+import type { SmartRootContextT } from '../types';
 
-const { InnerSmartRootProvider, SmartRootConsumer } = React.createContext<SmartRootContextT>({
-  contextMap: {},
+const { Provider, Consumer } = React.createContext<SmartRootContextT>({
+    contextsMap: {},
+    addContexts() {},
 });
 
-export { InnerSmartRootProvider, SmartRootConsumer };
+export { Provider as InnerSmartRootProvider, Consumer as SmartRootConsumer };

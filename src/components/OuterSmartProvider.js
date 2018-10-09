@@ -1,59 +1,64 @@
 // @flow
 import * as React from 'react';
 import { SmartRootConsumer } from '../contexts/SmartRootContext';
-import { InnerSmartProvider } from '../contexts/SmartContext';
-import { SmartContextT, SmartRootContextT } from '../types';
+import type { ProvidersT, SmartRootContextT } from '../types';
 
 type OuterProps = {|
-    children: React.Node,
-    addContext: Function,
-    Context: React.Context,
-    value: any,
+    addContexts: Function,
+    Providers: ProvidersT,
     tag: string,
-    actions: Array<Function>,
+    state: Object,
+    actions: Object,
+    children: React.Node,
 |};
 
 class OuterSmartProvider extends React.Component<OuterProps, {}> {
     componentDidMount() {
-        const { tag, addContext } = this.props;
+        const { tag, addContexts } = this.props;
 
         if (tag) {
-            const Context = React.createContext(null);
-            addContext(Context, tag);
+            addContexts(tag);
         } else {
             throw new Error("You must pass a 'tag' prop to the SmartProvider");
         }
     }
 
     render() {
-        const { Context, value, actions, children } = this.props;
+        const { Providers, state, actions, children } = this.props;
 
-        if (Context) {
+        if (Providers) {
             return (
-                <Context.Provider value={value, actions}>
-                    {React.children.only(children)}
-                </Context.Provider>
+                <Providers.State value={state}>
+                    <Providers.Actions value={actions}>
+                        {React.Children.only(children)}
+                    </Providers.Actions>
+                </Providers.State>
             );
         }
+
+        return null;
     }
 }
 
 type InnerProps = {|
     tag: string,
-    value: any,
-    actions: Array<Function>,
+    state: Object,
+    actions: Object,
+    children: React.Node,
 |};
 
-const ProviderWithContext = ({ tag, value, actions }: InnerProps) => (
+const ProviderWithContext = ({ tag, state, actions, children }: InnerProps) => (
     <SmartRootConsumer>
-        {({ addContext, contextMap }: SmartRootContextT) => (
+        {({ addContexts, contextsMap }: SmartRootContextT) => (
             <OuterSmartProvider
                 tag={tag}
-                value={value}
+                state={state}
                 actions={actions}
-                addContext={addContext}
-                Context={contextMap[tag]}
-            />
+                addContexts={addContexts}
+                Providers={contextsMap[tag] && contextsMap[tag].Providers}
+            >
+                {React.Children.only(children)}
+            </OuterSmartProvider>
         )}
     </SmartRootConsumer>
 );
